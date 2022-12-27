@@ -1,17 +1,28 @@
 # reddit_clone
 
-A new Flutter project.
 
-## Getting Started
+A completely Responsive Reddit App - Works on Android, iOS & Web!
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
+- Google Login
+- Creating Communities
+- Editing Communities
+- Karmas feature
+- Awards
+- Guest Feature
+- Searching Communities
+- Toggling Theme
+- Moderator Option on Posts
+- Upvoting/Downvoting Posts
+- Log Out
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# reddit_clone
+## Tech Used
+
+Database & hosting : Firebase
+
+Client: Flutter, Riverpod
+
+## Feedback
+If you have any feedback, please reach out to me at akhileshdevop@gmail.com
