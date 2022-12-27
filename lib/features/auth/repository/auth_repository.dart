@@ -35,6 +35,9 @@ class AuthRepository {
   CollectionReference get _user =>
       _firestore.collection(FirebaseConstants.usersCollection);
 
+//firebase state persistance
+  Stream<User?> get authStateChange => _auth.authStateChanges();
+
   FutureEither<UserModel> signInWithGoogle() async {
     try {
       //google SignIn which provides us method and to view the enails
