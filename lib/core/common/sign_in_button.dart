@@ -11,7 +11,7 @@ class SignInButton extends ConsumerWidget {
 
   //creating function to bind with ui screen
   void signWithGooogle(BuildContext context, WidgetRef ref) {
-    ref.read(authControllerProvider).signInWithGoogle(context);
+    ref.read(authControllerProvider.notifier).signInWithGoogle(context);
   }
 
   @override

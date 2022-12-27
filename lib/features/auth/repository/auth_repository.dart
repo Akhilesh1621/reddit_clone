@@ -66,6 +66,7 @@ class AuthRepository {
 
         await _user.doc(userCredential.user!.uid).set(userModel.toMap());
       } else {
+        //if user allready exeist then we use this
         userModel = await getUserData(userCredential.user!.uid).first;
       }
       //error handling
