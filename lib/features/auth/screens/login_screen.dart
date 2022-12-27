@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit_clone/core/common/loader.dart';
+import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 
 import '../../../core/common/sign_in_button.dart';
 import '../../../core/constants/constants.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = ref.watch(authControllerProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Padding(
@@ -31,34 +36,36 @@ class LoginScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 30.0,
-          ),
-          const Text(
-            '"Dive Into Anything"',
-            style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.5),
-          ),
-          const SizedBox(
-            height: 30.0,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset(
-              Constants.loginEmotePath,
-              height: 400.0,
+      body: isLoading
+          ? const Loader()
+          : Column(
+              children: [
+                const SizedBox(
+                  height: 30.0,
+                ),
+                const Text(
+                  '"Dive Into Anything"',
+                  style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5),
+                ),
+                const SizedBox(
+                  height: 30.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    Constants.loginEmotePath,
+                    height: 400.0,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                const SignInButton(),
+              ],
             ),
-          ),
-          const SizedBox(
-            height: 20.0,
-          ),
-          const SignInButton(),
-        ],
-      ),
     );
   }
 }
