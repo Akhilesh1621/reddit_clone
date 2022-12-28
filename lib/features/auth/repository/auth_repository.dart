@@ -36,6 +36,7 @@ class AuthRepository {
       _firestore.collection(FirebaseConstants.usersCollection);
 
 //firebase state persistance
+//to check the changes or updates after login
   Stream<User?> get authStateChange => _auth.authStateChanges();
 
   FutureEither<UserModel> signInWithGoogle() async {
