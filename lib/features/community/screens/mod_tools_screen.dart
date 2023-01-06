@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class ModToolsScreen extends StatelessWidget {
   const ModToolsScreen({Key? key}) : super(key: key);
@@ -11,6 +9,22 @@ class ModToolsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Mods tool'),
       ),
+      body: Column(children: [
+        ListTile(
+          leading: const Icon(Icons.add_moderator),
+          title: const Text(
+            'Add Moderator',
+          ),
+          onTap: () {},
+        ),
+        ListTile(
+          leading: const Icon(Icons.edit),
+          title: const Text(
+            'Eddting Community',
+          ),
+          onTap: () {},
+        ),
+      ]),
     );
   }
 }
