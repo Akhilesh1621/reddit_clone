@@ -82,7 +82,7 @@ class ComunnityController extends StateNotifier<bool> {
       required BuildContext context,
       required Community community}) async {
 // image selected from gallery will be stored as 'communities/profile/filename'
-
+    state = true;
     if (profileFile != null) {
       final res = await _storageRepository.storeFile(
         path: 'communities/profile',
@@ -101,6 +101,7 @@ class ComunnityController extends StateNotifier<bool> {
         id: community.name,
         file: bannerFile,
       );
+
       res.fold(
         (l) => showSNackBar(context, l.message),
         (r) {
@@ -110,7 +111,7 @@ class ComunnityController extends StateNotifier<bool> {
       );
     }
     final res = await _communityRepository.editCommunity(community);
-
+    state = false;
     res.fold(
       (l) => showSNackBar(context, l.message),
       (r) => Routemaster.of(context).pop(),
