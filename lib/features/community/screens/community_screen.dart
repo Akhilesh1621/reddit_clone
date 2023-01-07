@@ -11,7 +11,7 @@ class CommunityScreen extends ConsumerWidget {
   const CommunityScreen({super.key, required this.name});
 
   void navigateToModTools(BuildContext context) {
-    Routemaster.of(context).push('/mod-tools');
+    Routemaster.of(context).push('/mod-tools/$name');
   }
 
   @override
@@ -72,8 +72,9 @@ class CommunityScreen extends ConsumerWidget {
                                             ),
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 25.0)),
-                                        onPressed: () =>
-                                            navigateToModTools(context),
+                                        onPressed: () => navigateToModTools(
+                                          context,
+                                        ),
                                         child: const Text('Mod tools'),
                                       )
                                     : OutlinedButton(
