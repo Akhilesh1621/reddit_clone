@@ -126,6 +126,7 @@ class ComunnityController extends StateNotifier<bool> {
         showSNackBar(context, 'profile updated');
       });
     }
+
 // image selected from gallery will be stored as 'communities/banner/filename'
     if (bannerFile != null) {
       final res = await _storageRepository.storeFile(
