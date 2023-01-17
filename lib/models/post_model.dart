@@ -96,10 +96,10 @@ class Post {
       communityName: (map["communityName"] ?? '') as String,
       communityProfilePic: (map["communityProfilePic"] ?? '') as String,
       upvotes: List<String>.from(
-        ((map['upvotes'] ?? const <String>[]) as List<String>),
+        ((map['upvotes'] ?? const <String>[])),
       ),
       downvotes: List<String>.from(
-        ((map['downvotes'] ?? const <String>[]) as List<String>),
+        ((map['downvotes'] ?? const <String>[])),
       ),
       commentCount: (map["commentCount"] ?? 0) as int,
       username: (map["username"] ?? '') as String,
@@ -108,7 +108,7 @@ class Post {
       createdAt:
           DateTime.fromMillisecondsSinceEpoch((map["createdAt"] ?? 0) as int),
       awards: List<String>.from(
-        ((map['awards'] ?? const <String>[]) as List<String>),
+        ((map['awards'] ?? const <String>[])),
       ),
     );
   }
