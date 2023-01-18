@@ -163,4 +163,15 @@ class PostController extends StateNotifier<bool> {
     res.fold((l) => showSNackBar(context, 'Post not  Deleted'),
         (r) => showSNackBar(context, 'Post Deleted'));
   }
+
+  /// upvote & downvotes
+  void upvote(Post post) async {
+    final uid = _ref.watch(userProvider)!.uid;
+    _postRepository.upvote(post, uid);
+  }
+
+  void downvote(Post post) async {
+    final uid = _ref.watch(userProvider)!.uid;
+    _postRepository.downvote(post, uid);
+  }
 }
