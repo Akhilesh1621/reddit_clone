@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:reddit_clone/core/constants/firebase_constant.dart';
+import 'package:reddit_clone/models/post_model.dart';
 import 'package:reddit_clone/models/user_model.dart';
 
 import '../../../core/faliure.dart';
@@ -35,4 +36,20 @@ class UserProfileRespository {
 
   CollectionReference get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);
+
+  CollectionReference get _posts =>
+      _firestore.collection(FirebaseConstants.postsCollection);
+
+//displayin post in user screen
+  Stream<List<Post>> getUserPost(String uid) {
+    return _posts
+        .where('uid', isEqualTo: uid)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((event) => event.docs
+            .map((e) => Post.fromMap(
+                  e.data() as Map<String, dynamic>,
+                ))
+            .toList());
+  }
 }

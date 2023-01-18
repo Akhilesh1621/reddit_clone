@@ -12,6 +12,9 @@ import 'package:reddit_clone/features/community/repository/community_repsitory.d
 import 'package:reddit_clone/models/community_model.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../../home/user_profile/controller/user_profile_controller.dart';
+import '../../../models/post_model.dart';
+
 final userCommunitiesProvider = StreamProvider((ref) {
   final communityController = ref.watch(communityControllerProvider.notifier);
   return communityController.getUserCommunities();
@@ -25,6 +28,12 @@ final communityControllerProvider =
       communityRepository: communityRepository,
       ref: ref,
       storageRepository: storageRepository);
+});
+
+// stream provider for getting user post to display in profile screen
+
+final getcommunityPostProvider = StreamProvider.family((ref, String name) {
+  return ref.watch(communityControllerProvider.notifier).getCommunitePost(name);
 });
 
 //profile UI screen
@@ -161,5 +170,10 @@ class ComunnityController extends StateNotifier<bool> {
     final res = await _communityRepository.addMods(communityName, uids);
     res.fold((l) => showSNackBar(context, l.message),
         (r) => Routemaster.of(context).pop());
+  }
+
+//displayin post in user screen and create stream provider
+  Stream<List<Post>> getCommunitePost(String name) {
+    return _communityRepository.getCommunitePost(name);
   }
 }
