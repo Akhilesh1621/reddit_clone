@@ -1,11 +1,17 @@
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit_clone/core/common/error_text.dart';
+import 'package:reddit_clone/core/common/loader.dart';
 import 'package:reddit_clone/core/constants/constants.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
+import 'package:reddit_clone/features/community/controller/comunity_controller.dart';
 import 'package:reddit_clone/features/post/controller/post_controller.dart';
+
 import 'package:reddit_clone/models/post_model.dart';
+
 import 'package:reddit_clone/theme/pallete.dart';
+import 'package:routemaster/routemaster.dart';
 
 class PostCard extends ConsumerWidget {
   final Post post;
@@ -27,6 +33,16 @@ class PostCard extends ConsumerWidget {
   // downvote post
   void downvotePost(WidgetRef ref) async {
     ref.read(postControllerProvider.notifier).downvote(post);
+  }
+
+  // navigating to profile
+  void navigateToUser(BuildContext context) {
+    Routemaster.of(context).push('/u/${post.uid}');
+  }
+
+  // navigating to communityProfile
+  void navigateToCommunityProfile(BuildContext context) {
+    Routemaster.of(context).push('/r/${post.communityName}');
   }
 
   @override
@@ -71,18 +87,25 @@ class PostCard extends ConsumerWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        '/r ${post.communityName}',
-                                        style: const TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
+                                      GestureDetector(
+                                        onTap: () =>
+                                            navigateToCommunityProfile(context),
+                                        child: Text(
+                                          '/r ${post.communityName}',
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                      Text(
-                                        '/r ${post.username}',
-                                        style: const TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
+                                      GestureDetector(
+                                        onTap: () => navigateToUser(context),
+                                        child: Text(
+                                          '/u ${post.username}',
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -101,7 +124,8 @@ class PostCard extends ConsumerWidget {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
+                          padding:
+                              const EdgeInsets.only(top: 10.0, bottom: 10.0),
                           child: Text(
                             post.title,
                             style: const TextStyle(
@@ -125,9 +149,12 @@ class PostCard extends ConsumerWidget {
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15.0),
-                              child: Text(
-                                post.description!,
-                                style: const TextStyle(color: Colors.grey),
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: Text(
+                                  post.description!,
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
                               ),
                             ),
                           )
@@ -195,6 +222,26 @@ class PostCard extends ConsumerWidget {
                             ),
                           ],
                         ),
+                        ref
+                            .watch(
+                                getCommunityByNameProvider(post.communityName))
+                            .when(
+                              data: (data) {
+                                if (data.mods.contains(user.uid)) {
+                                  return IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.admin_panel_settings,
+                                    ),
+                                  );
+                                }
+                                return const SizedBox();
+                              },
+                              error: (error, stackTrace) => ErrorText(
+                                error: error.toString(),
+                              ),
+                              loading: () => const Loader(),
+                            ),
                       ],
                     ),
                   )
