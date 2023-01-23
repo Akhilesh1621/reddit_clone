@@ -2,14 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit_clone/core/enums/enums.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/home/user_profile/repository/user_profile_repository.dart';
-import 'package:reddit_clone/home/user_profile/screens/edit_profile_screen.dart';
 import 'package:reddit_clone/models/user_model.dart';
 import 'package:routemaster/routemaster.dart';
 
 import '../../../core/provider/storeage_repository_provider.dart';
 import '../../../core/utlis.dart';
+import '../../../models/post_model.dart';
 
 final userProfileControllerProvider =
     StateNotifierProvider<UserProfileController, bool>((ref) {
@@ -19,6 +20,12 @@ final userProfileControllerProvider =
       userProfileRepository: userProfileRepository,
       ref: ref,
       storageRepository: storageRepository);
+});
+
+// stream provider for getting user post to display in profile screen
+
+final getUserPostProvider = StreamProvider.family((ref, String uid) {
+  return ref.watch(userProfileControllerProvider.notifier).getUserPost(uid);
 });
 
 class UserProfileController extends StateNotifier<bool> {
@@ -81,5 +88,24 @@ class UserProfileController extends StateNotifier<bool> {
       _ref.read(userProvider.notifier).update((state) => user);
       Routemaster.of(context).pop();
     });
+  }
+
+//displayin post in user screen and create stream provider
+  Stream<List<Post>> getUserPost(String uid) {
+    return _userProfileRepository.getUserPost(uid);
+  }
+
+//updating karma // also reuseable function
+
+  void updateUserKarma(
+    UserKarma karma,
+  ) async {
+    UserModel user = _ref.read(userProvider)!;
+    user = user.copyWith(karma: user.karma + karma.karma);
+
+    final res = await _userProfileRepository.updateUserKarma(user);
+
+    res.fold((l) => null,
+        (r) => _ref.read(userProvider.notifier).update((state) => user));
   }
 }

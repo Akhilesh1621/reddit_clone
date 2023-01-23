@@ -6,6 +6,7 @@ import 'package:reddit_clone/core/faliure.dart';
 import 'package:reddit_clone/core/provider/firebase_provider.dart';
 import 'package:reddit_clone/core/type_defs.dart';
 import 'package:reddit_clone/models/community_model.dart';
+import 'package:reddit_clone/models/post_model.dart';
 
 final communityRepositoryProvider = Provider((ref) {
   return CommunityRepository(firestore: ref.watch(firestoreProvider));
@@ -158,6 +159,21 @@ class CommunityRepository {
     }
   }
 
+  //displayin post in user screen
+  Stream<List<Post>> getCommunitePost(String name) {
+    return _posts
+        .where('communityName', isEqualTo: name)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((event) => event.docs
+            .map((e) => Post.fromMap(
+                  e.data() as Map<String, dynamic>,
+                ))
+            .toList());
+  }
+
+  CollectionReference get _posts =>
+      _firestore.collection(FirebaseConstants.postsCollection);
   CollectionReference get _communities =>
       _firestore.collection(FirebaseConstants.communitiesCollection);
 }

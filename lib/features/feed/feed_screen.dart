@@ -24,7 +24,6 @@ class FeedScreen extends ConsumerWidget {
                   );
                 },
                 error: (error, stackTrace) {
-                  print(error);
                   return ErrorText(
                     error: error.toString(),
                   );

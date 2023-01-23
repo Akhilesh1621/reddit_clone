@@ -8,6 +8,7 @@ import 'package:reddit_clone/core/faliure.dart';
 import 'package:reddit_clone/core/type_defs.dart';
 
 import '../../../core/provider/firebase_provider.dart';
+import '../../../models/comment_model.dart';
 import '../../../models/community_model.dart';
 import '../../../models/post_model.dart';
 
@@ -24,6 +25,12 @@ class PostRepository {
 
   CollectionReference get _posts =>
       _firestore.collection(FirebaseConstants.postsCollection);
+
+  CollectionReference get _comments =>
+      _firestore.collection(FirebaseConstants.commentsCollection);
+
+  CollectionReference get _users =>
+      _firestore.collection(FirebaseConstants.usersCollection);
 
   FutureVoid addPost(Post post) async {
     try {
@@ -120,6 +127,69 @@ class PostRepository {
             [userId],
           )
         },
+      );
+    }
+  }
+  //getting post bby id
+
+  Stream<Post> getPostById(String postId) {
+    return _posts.doc(postId).snapshots().map(
+          (event) => Post.fromMap(event.data() as Map<String, dynamic>),
+        );
+  }
+
+// comment adding
+  FutureVoid addComment(Comment comment) async {
+    try {
+      await _comments.doc(comment.id).set(comment.toMap());
+      return right(
+        _posts.doc(comment.postid).update({
+          'commentCount': FieldValue.increment(1),
+        }),
+      );
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  // list view of comment card..
+
+  Stream<List<Comment>> getCommentsOfPost(String postId) {
+    return _comments
+        .where('postid', isEqualTo: postId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((event) {
+      return event.docs.map((e) {
+        return Comment.fromMap(
+          e.data() as Map<String, dynamic>,
+        );
+      }).toList();
+    });
+  }
+
+  //gifting awards
+
+  FutureVoid awardPost(Post post, String awards, String senderId) async {
+    try {
+      _posts.doc(post.id).update({
+        'awards': FieldValue.arrayUnion([awards]),
+      });
+      _users.doc(senderId).update({
+        'awards': FieldValue.arrayRemove([awards]),
+      });
+      return right(_users.doc(post.uid).update({
+        'awards': FieldValue.arrayUnion([awards]),
+      }));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(
+        Failure(
+          e.toString(),
+        ),
       );
     }
   }

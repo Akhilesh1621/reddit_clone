@@ -7,9 +7,14 @@ import 'package:reddit_clone/features/community/controller/comunity_controller.d
 import 'package:reddit_clone/models/community_model.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../../core/common/post_card.dart';
+
 class CommunityScreen extends ConsumerWidget {
   final String name;
-  const CommunityScreen({super.key, required this.name});
+  const CommunityScreen({
+    super.key,
+    required this.name,
+  });
 
   void navigateToModTools(BuildContext context) {
     Routemaster.of(context).push('/mod-tools/$name');
@@ -112,9 +117,21 @@ class CommunityScreen extends ConsumerWidget {
                     ),
                   ];
                 },
-                body: const Text(
-                  'Displaying Post',
-                ),
+                body: ref.watch(getcommunityPostProvider(name)).when(
+                      data: (data) {
+                        return ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final post = data[index];
+                            return PostCard(post: post);
+                          },
+                        );
+                      },
+                      error: (error, stacktrace) {
+                        return ErrorText(error: error.toString());
+                      },
+                      loading: () => const Loader(),
+                    ),
               ),
               error: (error, stacktrace) => ErrorText(
                 error: error.toString(),
