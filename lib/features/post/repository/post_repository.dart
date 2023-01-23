@@ -29,6 +29,9 @@ class PostRepository {
   CollectionReference get _comments =>
       _firestore.collection(FirebaseConstants.commentsCollection);
 
+  CollectionReference get _users =>
+      _firestore.collection(FirebaseConstants.usersCollection);
+
   FutureVoid addPost(Post post) async {
     try {
       return right(_posts.doc(post.id).set(post.toMap()));
@@ -165,5 +168,29 @@ class PostRepository {
         );
       }).toList();
     });
+  }
+
+  //gifting awards
+
+  FutureVoid awardPost(Post post, String awards, String senderId) async {
+    try {
+      _posts.doc(post.id).update({
+        'awards': FieldValue.arrayUnion([awards]),
+      });
+      _users.doc(senderId).update({
+        'awards': FieldValue.arrayRemove([awards]),
+      });
+      return right(_users.doc(post.uid).update({
+        'awards': FieldValue.arrayUnion([awards]),
+      }));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(
+        Failure(
+          e.toString(),
+        ),
+      );
+    }
   }
 }

@@ -35,6 +35,13 @@ class PostCard extends ConsumerWidget {
     ref.read(postControllerProvider.notifier).downvote(post);
   }
 
+  // award post
+  void awardPost(WidgetRef ref, String awards, BuildContext context) async {
+    ref
+        .read(postControllerProvider.notifier)
+        .awardPost(post: post, awards: awards, context: context);
+  }
+
   // navigating to profile
   void navigateToUser(BuildContext context) {
     Routemaster.of(context).push('/u/${post.uid}');
@@ -128,6 +135,27 @@ class PostCard extends ConsumerWidget {
                               )
                           ],
                         ),
+//displaying awards
+                        if (post.awards.isNotEmpty) ...[
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          SizedBox(
+                            height: 25,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: post.awards.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final awards = post.awards[index];
+                                return Image.asset(
+                                  Constants.awards[awards]!,
+                                  height: 23,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+
                         Padding(
                           padding:
                               const EdgeInsets.only(top: 10.0, bottom: 10.0),
@@ -248,7 +276,36 @@ class PostCard extends ConsumerWidget {
                               loading: () => const Loader(),
                             ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => Dialog(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: GridView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: user.awards.length,
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 4),
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        final awards = user.awards[index];
+                                        return GestureDetector(
+                                          onTap: () =>
+                                              awardPost(ref, awards, context),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Image.asset(
+                                              Constants.awards[awards]!,
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                ),
+                              ),
+                            );
+                          },
                           icon: const Icon(
                             Icons.card_giftcard_outlined,
                           ),
