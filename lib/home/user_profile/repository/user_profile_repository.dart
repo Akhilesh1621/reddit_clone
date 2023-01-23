@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:reddit_clone/core/constants/firebase_constant.dart';
+
 import 'package:reddit_clone/models/post_model.dart';
 import 'package:reddit_clone/models/user_model.dart';
 
@@ -51,5 +52,25 @@ class UserProfileRespository {
                   e.data() as Map<String, dynamic>,
                 ))
             .toList());
+  }
+
+//function of Futurevoid of update karma
+
+  FutureVoid updateUserKarma(UserModel user) async {
+    try {
+      return right(
+        _users.doc(user.uid).update({
+          'karma': user.karma,
+        }),
+      );
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(
+        Failure(
+          e.toString(),
+        ),
+      );
+    }
   }
 }

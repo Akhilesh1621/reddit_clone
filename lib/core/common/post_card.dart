@@ -247,6 +247,12 @@ class PostCard extends ConsumerWidget {
                               ),
                               loading: () => const Loader(),
                             ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.card_giftcard_outlined,
+                          ),
+                        )
                       ],
                     ),
                   ),
