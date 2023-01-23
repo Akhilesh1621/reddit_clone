@@ -9,6 +9,12 @@ import '../../../core/constants/constants.dart';
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
+  //guest login
+
+  void signInWithGuest(WidgetRef ref, BuildContext context) {
+    ref.read(authControllerProvider.notifier).signInWithGuest(context);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(authControllerProvider);
@@ -26,7 +32,7 @@ class LoginScreen extends ConsumerWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () => signInWithGuest(ref, context),
             child: const Text(
               'Skip',
               style: TextStyle(

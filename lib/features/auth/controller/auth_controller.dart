@@ -38,9 +38,23 @@ class AuthController extends StateNotifier<bool> {
 //state persistence
   Stream<User?> get authStateChange => _authRepository.authStateChange;
 
-  void signInWithGoogle(BuildContext context) async {
+  void signInWithGoogle(BuildContext context, bool isFromLogin) async {
     state = true;
-    final user = await _authRepository.signInWithGoogle();
+    final user = await _authRepository.signInWithGoogle(isFromLogin);
+    state = false;
+    user.fold(
+      //failure
+      (l) => showSNackBar(context, l.message),
+      //sucess
+      (userModel) =>
+          _ref.read(userProvider.notifier).update((state) => userModel),
+    );
+  }
+
+// guest login
+  void signInWithGuest(BuildContext context) async {
+    state = true;
+    final user = await _authRepository.signInWithGuest();
     state = false;
     user.fold(
       //failure

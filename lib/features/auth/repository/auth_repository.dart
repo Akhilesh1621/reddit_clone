@@ -39,7 +39,7 @@ class AuthRepository {
 //to check the changes or updates after login
   Stream<User?> get authStateChange => _auth.authStateChanges();
 
-  FutureEither<UserModel> signInWithGoogle() async {
+  FutureEither<UserModel> signInWithGoogle(bool isFromLogin) async {
     try {
       //google SignIn which provides us method and to view the enails
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
@@ -50,8 +50,13 @@ class AuthRepository {
         idToken: googleAuth?.idToken,
       );
 //user auth for storing all our user in console
-      UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
+      UserCredential userCredential;
+      if (isFromLogin) {
+        userCredential = await _auth.signInWithCredential(credential);
+      } else {
+        userCredential =
+            await _auth.currentUser!.linkWithCredential(credential);
+      }
 
       UserModel userModel;
 
@@ -82,6 +87,38 @@ class AuthRepository {
         //if user allready exeist then we use this
         userModel = await getUserData(userCredential.user!.uid).first;
       }
+      //error handling
+      return right(userModel);
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(
+        Failure(
+          e.toString(),
+        ),
+      );
+    }
+  }
+
+// guest login
+
+  FutureEither<UserModel> signInWithGuest() async {
+    try {
+      var userCredential = await _auth.signInAnonymously();
+      //storing the data in firestore
+      UserModel userModel = UserModel(
+        name: 'Guest',
+        profilePic: Constants.avatarDefault,
+        banner: Constants.bannerDefault,
+        uid: userCredential.user!.uid,
+        email: userCredential.user!.email ?? '',
+        isAuthenticated: false,
+        karma: 0,
+        awards: [],
+      );
+
+      await _user.doc(userCredential.user!.uid).set(userModel.toMap());
+
       //error handling
       return right(userModel);
     } on FirebaseException catch (e) {
