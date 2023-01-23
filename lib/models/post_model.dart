@@ -89,10 +89,8 @@ class Post {
     return Post(
       id: (map["id"] ?? '') as String,
       title: (map["title"] ?? '') as String,
-      link: map['link'] != null ? map["link"] ?? '' as String : null,
-      description: map['description'] != null
-          ? map["description"] ?? '' as String
-          : null,
+      link: map["link"] ?? '',
+      description: map['description'] != null ? map["description"] ?? '' : null,
       communityName: (map["communityName"] ?? '') as String,
       communityProfilePic: (map["communityProfilePic"] ?? '') as String,
       upvotes: List<String>.from(

@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
-import 'package:reddit_clone/features/post/controller/post_controller.dart';
 import 'package:reddit_clone/home/user_profile/repository/user_profile_repository.dart';
-import 'package:reddit_clone/home/user_profile/screens/edit_profile_screen.dart';
 import 'package:reddit_clone/models/user_model.dart';
 import 'package:routemaster/routemaster.dart';
 

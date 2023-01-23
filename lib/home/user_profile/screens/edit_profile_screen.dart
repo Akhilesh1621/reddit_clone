@@ -10,7 +10,6 @@ import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/utlis.dart';
-import '../../../features/community/controller/comunity_controller.dart';
 import '../../../theme/pallete.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
